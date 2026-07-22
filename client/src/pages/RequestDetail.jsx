@@ -76,25 +76,54 @@ export default function RequestDetail() {
 
   const canDelete = user.role === 'admin' || (user.id === r.requester?._id && r.status === 'pending');
   const canUpdateStatus = user.role === 'admin' || (user.role === 'officer' && r.assignedTo?._id === user.id);
+  const imgBase = import.meta.env.VITE_API_URL || '';
 
   return (
     <div>
-      <h1>{r.title}</h1>
+      <div className="detail-head">
+        <h1>{r.title}</h1>
+        <StatusBadge status={r.status} />
+      </div>
       <Alert>{error}</Alert>
       <Alert type="success">{success}</Alert>
 
       <div className="card">
-        <p><strong>Status:</strong> <StatusBadge status={r.status} /></p>
-        <p><strong>Category:</strong> {r.category?.name} &nbsp; <strong>Priority:</strong> <span style={{ textTransform: 'capitalize' }}>{r.priority}</span></p>
-        <p><strong>Location:</strong> {r.location}</p>
-        <p><strong>Submitted by:</strong> {r.requester?.name} ({r.requester?.email})</p>
-        <p><strong>Assigned to:</strong> {r.assignedTo ? `${r.assignedTo.name}` : 'Not yet assigned'}</p>
-        <p><strong>Description:</strong></p>
-        <p className="muted">{r.description}</p>
+        <div className="meta-grid">
+          <div className="meta-item">
+            <div className="meta-label">Category</div>
+            <div className="meta-value">{r.category?.name}</div>
+          </div>
+          <div className="meta-item">
+            <div className="meta-label">Priority</div>
+            <div className="meta-value" style={{ textTransform: 'capitalize' }}>{r.priority}</div>
+          </div>
+          <div className="meta-item">
+            <div className="meta-label">Location</div>
+            <div className="meta-value">{r.location}</div>
+          </div>
+          <div className="meta-item">
+            <div className="meta-label">Submitted by</div>
+            <div className="meta-value">{r.requester?.name}</div>
+          </div>
+          <div className="meta-item">
+            <div className="meta-label">Assigned to</div>
+            <div className="meta-value">{r.assignedTo ? r.assignedTo.name : 'Not yet assigned'}</div>
+          </div>
+          <div className="meta-item">
+            <div className="meta-label">Submitted on</div>
+            <div className="meta-value">{new Date(r.createdAt).toLocaleDateString()}</div>
+          </div>
+        </div>
+
+        <div className="detail-section">
+          <div className="meta-label">Description</div>
+          <p className="detail-desc">{r.description}</p>
+        </div>
+
         {r.evidenceImage && (
-          <div>
-            <strong>Evidence photo:</strong><br />
-            <img className="evidence-img" src={r.evidenceImage} alt="Evidence of the fault" />
+          <div className="detail-section">
+            <div className="meta-label">Evidence photo</div>
+            <img className="evidence-img" src={`${imgBase}${r.evidenceImage}`} alt="Evidence of the fault" />
           </div>
         )}
         {canDelete && <button className="btn danger small" onClick={remove}>Delete request</button>}
@@ -132,7 +161,7 @@ export default function RequestDetail() {
         <ul className="history">
           {data.history.map((h) => (
             <li key={h._id}>
-              <strong>{h.action.replace(/_/g, ' ').toLowerCase()}</strong> — {h.details}
+              <strong style={{ textTransform: 'capitalize' }}>{h.action.replace(/_/g, ' ').toLowerCase()}</strong> — {h.details}
               <div className="when">{h.actor?.name} · {new Date(h.createdAt).toLocaleString()}</div>
             </li>
           ))}
