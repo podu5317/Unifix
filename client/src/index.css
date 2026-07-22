@@ -181,3 +181,5 @@ td a:hover { text-decoration: underline; }
 .detail-section { margin-top: 16px; }
 .detail-desc { font-size: 0.95rem; line-height: 1.65; color: var(--text); margin-top: 4px; }
 .evidence-img { max-width: 420px; width: 100%; border-radius: 12px; margin-top: 8px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+/* Delete button - bottom right of the card */
+.card > .btn.danger.small { display: block; margin-left: auto; margin-top: 18px; }
